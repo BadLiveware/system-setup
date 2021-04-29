@@ -1,0 +1,78 @@
+---
+- name: Install universal base packages
+  pacman:
+      name: "{{ linux.base_packages }}"
+      state: present
+  tags:
+    - packages
+
+- name: Create pacman hook directory
+  file: path=/etc/pacman.d/hooks
+        state=directory
+  tags:
+    - packages
+
+- name: Use all cores when compressing packages
+  lineinfile:
+    dest: /etc/makepkg.conf
+    regexp: "^COMPRESSXZ"
+    line: "COMPRESSXZ=(xz -c -z - --threads=0)"
+
+- name: Create AUR directory
+  file: path=/home/{{ linux.user.name }}/{{ linux.aur.dir }}
+        state=directory
+        owner={{ linux.user.name }}
+        group={{ linux.user.group }}
+  tags:
+    - aur
+    - packages
+
+- name: create aur user
+  user:
+    name: aur_builder
+    create_home: no
+    group: wheel
+
+- name: add aur user to sudoers for pacman
+  lineinfile:
+    path: /etc/sudoers.d/11-install-aur_builder
+    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+    create: yes
+    validate: 'visudo -cf %s'
+
+- name: install paru
+  aur:
+    name: paru
+    state: present 
+  become: yes
+  become_user: aur_builder
+
+- name: Install AUR packages
+  aur:
+    name: "{{ linux.aur.packages }}"
+    user: "{{ linux.user.name }}"
+  become: yes
+  become_user: aur_builder
+  tags:
+    - aur
+    - packages
+
+# - name: Push pacman cache cleanup service
+#   copy: src=paccache.service dest=/etc/systemd/system/paccache.service
+#   notify:
+#     - reload systemd config
+#   tags:
+#     - packages
+
+# - name: Push pacman cache cleanup timer
+#   copy: src=paccache.timer dest=/etc/systemd/system/paccache.timer
+#   notify:
+#     - reload systemd config
+#     - restart paccache
+#   tags:
+#     - packages
+
+# - name: Enable and start pacman cache cleanup timer
+#   service: name=paccache.timer enabled=yes state=started
+#   tags:
+#     - packages

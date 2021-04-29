@@ -1,0 +1,96 @@
+---
+- name: Set power plan to high performance
+  community.windows.win_power_plan:
+    name: high performance
+
+- name: Set timezone to 'Romance Standard Time' (GMT+01:00)
+  community.windows.win_timezone:
+    timezone: W. Europe Standard Time
+
+- name: Install OpenSSH
+  chocolatey.chocolatey.win_chocolatey:
+    name:
+    - openssh
+    state: latest
+    allow_prerelease: yes
+    package_params: "/SSHServerFeature"
+
+- name: Install base choco packages
+  chocolatey.chocolatey.win_chocolatey:
+    name: 
+    - curl
+    - openjdk
+    - dotnetcore-runtime
+    state: latest
+
+- name: Install base pre-release choco packages 
+  chocolatey.chocolatey.win_chocolatey:
+    name:
+    - microsoft-windows-terminal
+    state: latest
+    allow_prerelease: yes
+  
+- name: Install scoop & git
+  community.windows.win_scoop:
+    name:
+    - git 
+    global: yes
+
+- name: Install scoop buckets
+  community.windows.win_scoop_bucket: 
+    name: 
+    - extas
+    - nerd-fonts
+    - nonportable
+    - versions
+    - nightlies
+    - java
+
+- name: Install global scoop packages
+  community.windows.win_scoop:
+    name:
+    - aria2
+    - pwsh
+    - 7zip-zstd
+    - gsudo
+    - less
+    global: yes
+
+- name: Install scoop packages
+  community.windows.win_scoop:
+    name:
+    - alacritty
+    - sharex
+    - neovim-nightly
+    - keepass
+    - keepass-plugin-keepassrpc
+    - starship
+    - fd
+    - ripgrep
+    - bat
+    - fzf
+    - everything
+    - autohotkey
+    - powertoys
+    - firefox
+    - notepadplusplus
+    - vlc
+    - hyperfine
+    - libreoffice-stable
+
+- name: Set ahk scripts on boot
+  community.windows.win_scheduled_task:
+    name: TriggerTask
+    description: start {{ item.name }} on logon
+    actions:
+    - path: "{{ item.path }}"
+    triggers:
+    - type: logon
+    state: present
+  loop:
+    - { name: 'Guid-Clipboard', path: '../../../misc/Guid-Clipboard.ahk' }
+    # - { name: 'AlwaysOnTop', path: '../../misc/AlwaysOnTop.ahk' }
+
+- name: Bind esc to caps lock
+  community.windows.win_regmerge:
+    path: ../../../misc/rebind_keys.reg

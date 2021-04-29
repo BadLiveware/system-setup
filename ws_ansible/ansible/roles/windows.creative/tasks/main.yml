@@ -1,0 +1,10 @@
+# Install/uninstall with chocolatey
+- name: Install creative packages
+  community.windows.win_scoop:
+    name: 
+    - krita
+    - gimp
+    - inkscape
+    - reaper
+    state: latest
+  

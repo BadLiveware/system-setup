@@ -1,0 +1,35 @@
+add_newline = false
+scan_timeout = 10
+
+[character]
+symbol = "$"
+error_symbol = "X"
+use_symbol_for_status = true
+disabled = false
+
+[line_break]
+disabled = true
+
+[package]
+disabled = true
+
+[git]
+symbol = " "
+
+[git_branch]
+symbol = " "
+
+[git_status]
+enabled = true
+ahead = ""
+behind = ""
+diverged = "ﬕ"
+
+[dotnet]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[java]
+disabled = true

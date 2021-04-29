@@ -1,0 +1,12 @@
+---
+- name: Install editors
+  aur:
+    name: "{{ linux.editors.aur }}"
+    state: present
+  become: yes
+  become_user: aur_builder
+
+- name: Install editors
+  pacman:
+    name: "{{ linux.editors.pacman }}"
+    state: present
