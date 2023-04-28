@@ -20,8 +20,8 @@ Plug 'sheerun/vim-polyglot'
 call plug#end()
 
 " General
-language en_gb
-set spell spelllang=en_gb
+"language en_US
+set spell spelllang=en_us
 
 " Windows specifics 
 source $VIMRUNTIME/mswin.vim
