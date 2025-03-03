@@ -1,10 +1,5 @@
 call plug#begin('~/.config/nvim/plugged')
 
-" Aesthetics
-Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
-Plug 'itchyny/lightline.vim'
-Plug 'junegunn/rainbow_parentheses.vim'
-
 " Base functionality
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sensible'
@@ -21,7 +16,7 @@ call plug#end()
 
 " General
 "language en_US
-set spell spelllang=en_us
+" set spell spelllang=en_us
 
 " Windows specifics 
 source $VIMRUNTIME/mswin.vim
@@ -84,26 +79,7 @@ silent! colorscheme challenger_deep
 if has('nvim') || has('termguicolors')
 	set termguicolors
 endif
-let g:lightline = {
-      \ 'colorscheme': 'challenger_deep',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste'  ],
-      \	 	    [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'lineinfo' ],
-      \		     [ 'percent' ],
-      \  	     [ 'fileformat' ],
-      \		     [ 'cocstatus', 'currentfunction' ] ]
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'coc#status',
-      \   'currentfunction': 'CocCurrentFunction',
-      \   'gitbranch': 'fugitive#head'
-      \ },
-      \ }
 set noshowmode
-
-silent! autocmd FileType lisp,clojure,scheme,powershell,vim RainbowParentheses
-
 
 " Mappings
 let mapleader = " "
